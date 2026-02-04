@@ -1,0 +1,223 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Reports {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+    <div class="row g-3 mb-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Product</label>
+            <select id="productSelect" class="form-select" onchange="loadReport()">
+                <option value="">All Products</option>
+                {% for p in products %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Period</label>
+            <select id="periodSelect" class="form-select" onchange="loadReport()">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="weekly">Monthly</option>
+                <option value="weekly">Yearly</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">From</label>
+            <input type="date" id="dateFrom" class="form-control" onchange="loadReport()">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">To</label>
+            <input type="date" id="dateTo" class="form-control" onchange="loadReport()">
+        </div>
+
+        <div class="col-md-3 text-end">
+            <button class="btn btn-success w-100" onclick="exportExcel()">
+                <i class="fas fa-file-excel me-1"></i> Export Excel
+            </button>
+        </div>
+    </div>
+
+    <div style="height: 500px">
+        <canvas id="stockChart"></canvas>
+    </div>
+</div>
+
+  
+  <div class="card card-body border-0 shadow table-wrapper table-responsive mt-4">
+      <table class="table table-hover">
+          <thead>
+              <tr>
+                  <th class="border-gray-200">No</th>
+                  <th class="border-gray-200">Product</th>						
+                  <th class="border-gray-200">Last Updated</th>
+                  <th class="border-gray-200">Transaction Type</th>
+                  <th class="border-gray-200">Quantity</th>
+                  <th class="border-gray-200">Location</th>
+              </tr>
+          </thead>
+        <tbody id="reportTableBody">
+            <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+      <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+          <nav aria-label="Page navigation example">
+              <ul class="pagination mb-0">
+                  <li class="page-item">
+                      <a class="page-link" href="#">Previous</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="#">1</a>
+                  </li>
+                  <li class="page-item active">
+                      <a class="page-link" href="#">2</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="#">3</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="#">4</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="#">5</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                  </li>
+              </ul>
+          </nav>
+          <div class="fw-normal small mt-4 mt-lg-0">Showing <b>5</b> out of <b>25</b> entries</div>
+      </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+    let stockChart = null;
+
+    function loadReport() {
+        const period = document.getElementById("periodSelect").value;
+        const productId = document.getElementById("productSelect").value;
+        const dateFrom = document.getElementById("dateFrom").value;
+        const dateTo = document.getElementById("dateTo").value;
+
+        let params = new URLSearchParams({
+            period: period
+        });
+
+        if (productId) params.append("product_id", productId);
+        if (dateFrom) params.append("date_from", dateFrom);
+        if (dateTo) params.append("date_to", dateTo);
+
+        fetch(`/reports/fetch/?${params.toString()}`)
+            .then(res => res.json())
+            .then(data => {
+                renderChart(data.chart);
+                renderTable(data.table);
+            });
+    }
+
+    function renderChart(data) {
+        const ctx = document.getElementById("stockChart").getContext("2d");
+        console.log(data)
+        if (stockChart) stockChart.destroy();
+
+        stockChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: data.labels,
+                datasets: [
+                    { label: "Stock In", data: data.IN },
+                    { label: "Stock Out", data: data.OUT },
+                    { label: "Stock Sale", data: data.SALE }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+    }
+
+    function renderTable(rows) {
+        const tbody = document.getElementById("reportTableBody");
+        tbody.innerHTML = "";
+
+        if (!rows.length) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        No data found
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        rows.forEach((r, index) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>
+                        <a href="#" class="fw-bold">
+                            ${index + 1}
+                        </a>
+                    </td>
+
+                    <td>
+                        <span class="fw-normal">${r.product}</span>
+                    </td>
+
+                    <td>
+                        <span class="fw-normal">${r.date}</span>
+                    </td>
+
+                    <td>
+                        <span class="fw-bold ${r.type === 'IN' ? 'text-success' : 'text-danger'}">
+                            ${r.type} ${r.IsSale ? 'with Sales' : ''}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="fw-bold">${r.quantity}</span>
+                    </td>
+
+                    <td>
+                        <span class="fw-normal">${r.location}</span>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function exportExcel() {
+        const product = document.getElementById("productSelect").value;
+        const period = document.getElementById("periodSelect").value;
+        const from = document.getElementById("dateFrom").value;
+        const to = document.getElementById("dateTo").value;
+
+        const params = new URLSearchParams({
+            product: product,
+            period: period,
+            from: from,
+            to: to
+        });
+
+        window.location.href = `/reports/export/excel?${params.toString()}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadReport);
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,129 @@
+        <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
+            <a class="navbar-brand me-lg-5" href="/">
+                <img class="navbar-brand-dark" src="/static/assets/img/brand/light.svg" alt="Volt logo" /> <img class="navbar-brand-light" src="/static/assets/img/brand/dark.svg" alt="Volt logo" />
+            </a>
+            <div class="d-flex align-items-center">
+                <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+
+        <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
+          <div class="sidebar-inner px-4 pt-3">
+            <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+              <div class="d-flex align-items-center">
+                <div class="avatar-lg me-4">
+                  <img src="/static/assets/img/team/profile-picture-3.jpg" class="card-img-top rounded-circle border-white"
+                    alt="Bonnie Green">
+                </div>
+                <div class="d-block">
+                  <h2 class="h5 mb-3">Hi, Jane</h2>
+                  <a href="/page-sign-in.html" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
+                    <svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>            
+                    Sign Out
+                  </a>
+                </div>
+              </div>
+              <div class="collapse-close d-md-none">
+                <a href="#sidebarMenu" data-bs-toggle="collapse"
+                    data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="true"
+                    aria-label="Toggle navigation">
+                    <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                  </a>
+              </div>
+            </div>
+            <ul class="nav flex-column pt-3 pt-md-0">
+              <li class="nav-item">
+                <a href="/" class="nav-link d-flex align-items-center">
+                  <span class="sidebar-icon">
+                    <img src="/static/assets/img/brand/light.svg" height="20" width="20" alt="Volt Logo">
+                  </span>
+                  <span class="mt-1 ms-1 sidebar-text">SmartStock</span>
+                </a>
+              </li>
+              <li class="nav-item {% if 'dashboard' in segment %} active {% endif %}">
+                <a href="/" class="nav-link">
+                  <span class="sidebar-icon">
+                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
+                  </span> 
+                  <span class="sidebar-text">Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item {% if 'transactions' in segment %} active {% endif %}">
+                <a href="/products" class="nav-link">
+                  <span class="sidebar-icon">
+                      <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z" clip-rule="evenodd"></path></svg>
+                    </span> 
+                  <span class="sidebar-text">Product</span>
+                </a>
+              </li>
+              <li class="nav-item {% if 'settings' in segment %} active {% endif %}">
+                <a href="/reports" class="nav-link">
+                  <span class="sidebar-icon">
+                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd"
+                        d="M3 3a1 1 0 000 2h1v9a2 2 0 002 2h9v1a1 1 0 102 0V6a2 2 0 00-2-2H3zm4 9l3-4 3 2 3-5 1 1-4 7-3-2-3 4-3-3 1-1z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span> 
+                  <span class="sidebar-text">Reports</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/stock" class="nav-link">
+                  <span class="sidebar-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                      <path d="M3.27 6.96L12 12l8.73-5.04" />
+                      <path d="M12 22V12" />
+                    </svg>
+                  </span>
+                  <span class="sidebar-text">Stock In/Out</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/sales" class="nav-link">
+                  <span class="sidebar-icon">
+                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd"
+                        d="M3 3a1 1 0 000 2h1l2.68 8.05A2 2 0 008.57 15h6.86a2 2 0 001.9-1.45L18.76 7H6.21l-.4-1.2A1 1 0 004.87 5H3zm5 13a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm6 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                  <span class="sidebar-text">Sales</span>
+                </a>
+              </li>
+              
+           
+              <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+              <li class="nav-item">
+                <a href="/audit" class="nav-link">
+                  <span class="sidebar-icon">
+                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd"
+                        d="M6 2a2 2 0 00-2 2v14a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2h-1.5a2.5 2.5 0 00-5 0H6zm2 6h6v1.5H8V8zm0 3h6v1.5H8V11zm0 3h4v1.5H8V14z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                  <span class="sidebar-text">Audit Logs</span>
+                </a>
+              </li>
+              
+              <li class="nav-item">
+                <a href="/setting.html" class="nav-link">
+                  <span class="sidebar-icon">
+                    <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M10 2L2 6l8 4 8-4-8-4zm8 6l-8 4-8-4v6a2 2 0 002 2h12a2 2 0 002-2V8z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                  <span class="sidebar-text">Settings</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
