@@ -1,7 +1,7 @@
-# Inventory & Sales Management System
+# SmartStock Inventory Management System
 
 ## Project Overview
-This project is a **web-based Inventory and Sales Management System** developed using **Python (Django Framework)**.  
+This project is a **web-based Inventory Management System** developed using **Python (Django Framework)**.  
 It is designed to help businesses manage **products, stock levels, sales transactions, audit logs, and analytical reports** efficiently.
 
 The system demonstrates the **effective application of programming languages, development frameworks, databases, and software development tools** to build a **robust and scalable software system**.
