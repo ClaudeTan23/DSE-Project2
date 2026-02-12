@@ -9,6 +9,9 @@ LOG_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 BASE_DIR = Path(__file__).resolve().parent.parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+LOG_DIR = BASE_DIR / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 
@@ -77,8 +80,8 @@ DATABASES = {
         'NAME': 'smartinventory',
         'USER': 'postgres',  
         'PASSWORD': 'password', 
-        # 'HOST': 'db',        
-        'HOST': '127.0.0.1',        
+        'HOST': 'DB',        
+        # 'HOST': '127.0.0.1',        
         'PORT': '5432',   
     }
 }
@@ -150,7 +153,7 @@ LOGGING = {
         },
         "file": {
             "class": "logging.FileHandler",
-            "filename": BASE_DIR / f"logs/{LOG_DATE}.log",
+            "filename": str(LOG_DIR / f"{LOG_DATE}.log"),
             "formatter": "verbose",
         },
     },
