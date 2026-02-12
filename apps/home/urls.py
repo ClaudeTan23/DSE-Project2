@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from apps.home import views
-from apps.home.views import index, products, reports, stock, audit_views, sale, alert_notification
+from apps.home.views import index, products, reports, stock, audit_views, sale, alert_notification, invoice
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -11,13 +11,16 @@ urlpatterns = [
     path("products", login_required(products.fetch_products , login_url="/login/"), name="fetch_products"),
     path("reports", login_required(reports.report_page, login_url="/login/"), name="report_page"),
     path("reports/fetch/", login_required(reports.fetch_stock_report , login_url="/login/"), name="fetch_stock_report"),
+    path("reports/export/excel", login_required(reports.export_excel_report , login_url="/login/"), name="export_excel_report"),
     path("stock", login_required(stock.home, login_url="/login/"), name="stock_page"),
     path("stock/in", login_required(stock.stock_in, login_url="/login/"), name="stock_in"),
     path("stock/out", login_required(stock.stock_out, login_url="/login/"), name="stock_out"),
     path("audit", login_required(audit_views.audit_log_list, login_url="/login/"), name="audit_log"),
     path("sales", login_required(sale.sales, login_url="/login/"), name="sales"),
+    path("sales/data", login_required(sale.sales_list, login_url="/login/"), name="sales_data"),
     path("sales/create/", login_required(sale.create_sales, login_url="/login/"), name="create_sale"),
     path("alerts/low-stock/", login_required(alert_notification.low_stock_alert, login_url="/login/"), name="alert_low_stock"),
+    path("invoice/<int:sale_id>/pdf", login_required(invoice.invoice_pdf, login_url="/login/"), name="invoice_pdf"),
 
     # Matches any html file
     re_path(r'^.*\.*', index.pages, name='pages'),
