@@ -1,6 +1,7 @@
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator
 from django.template import loader
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render
@@ -50,14 +51,23 @@ def add_product(request):
         }, status=400)
         
 @require_GET
-def fetch_products(request):
-    products = Product.objects.all().order_by('-created_at')
+def fetch_products(request):    
+    page_number = request.GET.get("page", 1)
+    per_page = 20
 
-    context = {
-        "products": products
-    }
+    qs = Product.objects.order_by('-created_at')
 
-    return render(request, "home/products.html", context)
+    paginator = Paginator(qs, per_page)
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "home/products.html",
+        {
+            "products": page_obj,
+            "paginator": paginator,
+        }
+    )
 
 
 def product_update(request, product_id):

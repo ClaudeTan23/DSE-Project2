@@ -69,32 +69,10 @@
         </tbody>
       </table>
       <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
-          <nav aria-label="Page navigation example">
-              <ul class="pagination mb-0">
-                  <li class="page-item">
-                      <a class="page-link" href="#">Previous</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">1</a>
-                  </li>
-                  <li class="page-item active">
-                      <a class="page-link" href="#">2</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">3</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">4</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">5</a>
-                  </li>
-                  <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                  </li>
-              </ul>
+          <nav aria-label="Page navigation example" style="cursor: pointer;">
+            <ul class="pagination mb-0" id="pagination"></ul>
           </nav>
-          <div class="fw-normal small mt-4 mt-lg-0">Showing <b>5</b> out of <b>25</b> entries</div>
+          <div class="fw-normal small mt-4 mt-lg-0" id="page-info" style="cursor: pointer;"></div>
       </div>
   </div>
 
@@ -105,7 +83,7 @@
 <script>
     let stockChart = null;
 
-    function loadReport() {
+    function loadReport(page) {
         const period = document.getElementById("periodSelect").value;
         const productId = document.getElementById("productSelect").value;
         const dateFrom = document.getElementById("dateFrom").value;
@@ -118,18 +96,21 @@
         if (productId) params.append("product_id", productId);
         if (dateFrom) params.append("date_from", dateFrom);
         if (dateTo) params.append("date_to", dateTo);
+        if (page) params.append("page", page);
 
         fetch(`/reports/fetch/?${params.toString()}`)
             .then(res => res.json())
             .then(data => {
                 renderChart(data.chart);
                 renderTable(data.table);
+                renderPagination(data.paginator);
+                scrollToTable()
             });
     }
 
     function renderChart(data) {
         const ctx = document.getElementById("stockChart").getContext("2d");
-        console.log(data)
+
         if (stockChart) stockChart.destroy();
 
         stockChart = new Chart(ctx, {
@@ -202,22 +183,64 @@
         });
     }
 
-    function exportExcel() {
-        const product = document.getElementById("productSelect").value;
-        const period = document.getElementById("periodSelect").value;
-        const from = document.getElementById("dateFrom").value;
-        const to = document.getElementById("dateTo").value;
+    function renderPagination(p) {
+        let html = "";
 
-        const params = new URLSearchParams({
-            product: product,
-            period: period,
-            from: from,
-            to: to
+        html += `
+            <li class="page-item ${!p.has_previous ? "disabled" : ""}">
+                <div class="page-link" onclick="loadReport(${p.page - 1})">Previous</div>
+            </li>
+        `;
+
+        p.page_range.forEach(num => {
+            if (Math.abs(num - p.page) <= 2) {
+                html += `
+                    <li class="page-item ${num === p.page ? "active" : ""}">
+                        <div class="page-link" onclick="loadReport(${num})">${num}</div>
+                    </li>
+                `;
+            }
         });
+
+        html += `
+            <li class="page-item ${!p.has_next ? "disabled" : ""}">
+                <div class="page-link" onclick="loadReport(${p.page + 1})">Next</div>
+            </li>
+        `;
+
+        document.getElementById("pagination").innerHTML = html;
+
+        document.getElementById("page-info").innerHTML =
+            `Showing <b>${p.start_index}</b> – <b>${p.end_index}</b> out of <b>${p.total_items}</b> entries`;
+    }
+
+
+
+    function exportExcel() {
+        const period = document.getElementById("periodSelect").value;
+        const productId = document.getElementById("productSelect").value;
+        const dateFrom = document.getElementById("dateFrom").value;
+        const dateTo = document.getElementById("dateTo").value;
+
+        let params = new URLSearchParams({
+            period: period
+        });
+
+        if (productId) params.append("product_id", productId);
+        if (dateFrom) params.append("date_from", dateFrom);
+        if (dateTo) params.append("date_to", dateTo);
 
         window.location.href = `/reports/export/excel?${params.toString()}`;
     }
 
-    document.addEventListener("DOMContentLoaded", loadReport);
+    function scrollToTable() {
+        window
+        .scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadReport(1));
 </script>
 {% endblock javascripts %}

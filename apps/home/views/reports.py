@@ -10,7 +10,10 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.utils.timezone import now
-from apps.home.services.fetch_report_service import get_report_data, get_report_table_data
+from apps.home.services.fetch_report_service import get_report_data, get_report_table_data, get_all_report_table_excel
+from apps.home.services.export_excel_service import export
+from django.core.paginator import Paginator
+
 
 @require_GET
 def report_page(request):
@@ -30,6 +33,8 @@ def fetch_stock_report(request):
     date_from = request.GET.get("date_from")
     date_to = request.GET.get("date_to")
     
+    page_number = request.GET.get("page", 1)
+        
     chart_data = get_report_data(
         product_id=product_id,
         period=period,
@@ -37,16 +42,14 @@ def fetch_stock_report(request):
         date_to=date_to
     )
 
-    table_data = get_report_table_data(
+    table_data, paginator, page_obj = get_report_table_data(
         product_id=product_id,
         date_from=date_from,
-        date_to=date_to
+        date_to=date_to,
+        page_number=page_number
     )
     
-    labels = []
-    stock_in = []
-    stock_out = []
-    stock_sale = []
+    labels, stock_in, stock_out, stock_sale = [], [], [], []
     
     for key in chart_data:
         labels.append(key)
@@ -61,5 +64,31 @@ def fetch_stock_report(request):
             "OUT": stock_out,
             "SALE": stock_sale
         },
-        "table": table_data
+        "table": table_data,
+        "paginator": {
+            "page": page_obj.number,
+            "page_size": paginator.per_page,
+            "total_pages": paginator.num_pages,
+            "total_items": paginator.count,
+            "has_next": page_obj.has_next(),
+            "has_previous": page_obj.has_previous(),
+            "start_index": page_obj.start_index(),
+            "end_index": page_obj.end_index(),
+            "page_range": list(paginator.page_range)
+            }
         })
+    
+@require_GET
+def export_excel_report(request):
+    period = request.GET.get("period", "daily")
+    product_id = request.GET.get("product_id")
+    date_from = request.GET.get("date_from")
+    date_to = request.GET.get("date_to")
+    
+    data = get_all_report_table_excel(
+        product_id=product_id,
+        date_from=date_from,
+        date_to=date_to,
+    )
+    
+    return export(data)

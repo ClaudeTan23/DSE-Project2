@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
@@ -89,4 +90,21 @@ def create_sales(request):
         "total": float(total)
     })
 
-    return JsonResponse({"error": "Invalid request"}, status=400)
+
+def sales_list(request):
+    page_number = request.GET.get("page", 1)
+    per_page = 20
+
+    qs = Sale.objects.order_by("-sale_date")
+
+    paginator = Paginator(qs, per_page)
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "home/sales.html",
+        {
+            "sales": page_obj,
+            "paginator": paginator,
+        }
+    )
