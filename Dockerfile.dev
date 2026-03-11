@@ -1,0 +1,18 @@
+FROM python:3.14.2
+
+WORKDIR /app
+
+# environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# install dependencies first (cache layer)
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# copy source only for production
+COPY . .
+
+
+CMD ["sh", "-c", "python manage.py migrate && gunicorn --config gunicorn-cfg.py core.wsgi"]
