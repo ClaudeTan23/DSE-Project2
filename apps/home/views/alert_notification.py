@@ -7,7 +7,7 @@ from apps.home.models import Product
 @require_GET
 def low_stock_alert(request):
 
-    threshold = int(request.GET.get("threshold", 105)) # stock limit
+    threshold = int(request.GET.get("threshold", 99)) # stock limit
 
     products = (
         Product.objects

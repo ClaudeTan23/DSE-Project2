@@ -211,7 +211,12 @@
                 <td><span class="fw-normal">{{ p.sku }}</span></td>
                 <td><span class="fw-normal">{{ p.category }}</span></td>
                 <td><span class="fw-bold">RM {{ p.price }}</span></td>
-                <td><span class="fw-bold text-success">{{ p.stock }}</span></td>
+                <td>
+                    {% if p.stock < 100 %}
+                        <span class="fw-bold text-danger">{{ p.stock }}</span>
+                    {% else %}
+                        <span class="fw-bold text-success">{{ p.stock }}</span>
+                    {% endif %}
                 <td>
                     <span class="fw-bold">{{ p.status }}</span>
                 </td>
