@@ -15,7 +15,7 @@ The system demonstrates the **effective application of programming languages, de
 | Programming Language | Python 3.14 |
 | Backend Framework | Django |
 | Frontend | HTML5, CSS3, Bootstrap 5, JavaScript |
-| Database | SQLite (Development), PostgreSQL (Production) |
+| Database | PostgreSQL |
 | ORM | Django ORM |
 | Authentication | Django Authentication System |
 | Containerisation | Docker, Docker Compose |
