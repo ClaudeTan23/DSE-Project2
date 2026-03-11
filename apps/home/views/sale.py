@@ -22,10 +22,6 @@ def sales(request):
     
     return render(request, 'home/sale.html', context)
 
-from django.db import transaction
-from django.http import JsonResponse
-import json
-
 @require_POST
 @transaction.atomic
 def create_sales(request):

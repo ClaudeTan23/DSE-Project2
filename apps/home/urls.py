@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from apps.home import views
-from apps.home.views import index, products, reports, stock, audit_views, sale, alert_notification, invoice
+from apps.home.views import index, products, reports, stock, audit_views, sale, alert_notification, invoice, profile
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -21,6 +21,8 @@ urlpatterns = [
     path("sales/create/", login_required(sale.create_sales, login_url="/login/"), name="create_sale"),
     path("alerts/low-stock/", login_required(alert_notification.low_stock_alert, login_url="/login/"), name="alert_low_stock"),
     path("invoice/<int:sale_id>/pdf", login_required(invoice.invoice_pdf, login_url="/login/"), name="invoice_pdf"),
+    path("profile", login_required(profile.get_user_profile, login_url="/login/"), name="profile"),
+    path("profile/update/", login_required(profile.profile_update, login_url="/login/"), name="profile_update"),
 
     # Matches any html file
     re_path(r'^.*\.*', index.pages, name='pages'),

@@ -80,5 +80,5 @@ This command will:
 ### Restart Application Container
 
 ```bash
-docker compose restart appseed-app
+docker compose restart
 ```
