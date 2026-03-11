@@ -62,6 +62,7 @@
                   <th class="border-gray-200">Transaction Type</th>
                   <th class="border-gray-200">Quantity</th>
                   <th class="border-gray-200">Location</th>
+                  <th class="border-gray-200">Total Sales</th>
               </tr>
           </thead>
         <tbody id="reportTableBody">
@@ -177,6 +178,9 @@
 
                     <td>
                         <span class="fw-normal">${r.location}</span>
+                    </td>
+                    <td>
+                        <span class="fw-normal">${r.total_sales}</span>
                     </td>
                 </tr>
             `;

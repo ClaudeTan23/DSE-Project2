@@ -98,7 +98,8 @@ def get_report_table_data(product_id=None, date_from=None, date_to=None, page_nu
             "type": s.transaction_type,
             "quantity": s.quantity,
             "location": s.location,
-            "IsSale": s.reference_type == "SALE"
+            "IsSale": s.reference_type == "SALE",
+            "total_sales": s.quantity * s.product.price if (s.reference_type == "SALE") else 0 
         }
         for s in page_obj
     ]
@@ -124,7 +125,8 @@ def get_all_report_table_excel(product_id=None, date_from=None, date_to=None, pa
             "Transaction Type": s.transaction_type,
             "Quantity": s.quantity,
             "Location": s.location,
-            "FromSale": s.reference_type == "SALE"
+            "From Sale": s.reference_type == "SALE",
+            "Total Sales": s.quantity * s.product.price if (s.reference_type == "SALE") else 0 
         }
         for s in qs
     ]
