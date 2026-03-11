@@ -112,7 +112,7 @@ function loadLowStockAlert() {
             // build notifications
             data.products.forEach(p => {
                 container.innerHTML += `
-                    <a href="/products/?s=id&v=${p.id}"
+                    <a href="/products?column=id&keyword=${p.id}"
                        class="list-group-item list-group-item-action border-bottom">
 
                         <div class="row align-items-center">

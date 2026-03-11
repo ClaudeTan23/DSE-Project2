@@ -59,3 +59,26 @@ The system demonstrates the **effective application of programming languages, de
   - Before & after data
 - Improves accountability and traceability
 
+## Development Environment (Docker)
+
+A separate Docker configuration is provided for the development environment to allow easier testing and code updates.
+
+### Run Development Containers
+
+Build and start the development environment with:
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+This command will:
+
+- Build the development Docker image
+- Start the **Django application**, **PostgreSQL database**, and **Nginx server**
+- Mount the project folder into the container for development
+
+### Restart Application Container
+
+```bash
+docker compose restart appseed-app
+```

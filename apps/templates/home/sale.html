@@ -179,7 +179,7 @@
                 alert("Sale created!\nInvoice: " + res.invoice_no);
                 location.reload();
             } else {
-                alert(res.error);
+                alert(res.message);
             }
         })
         .catch(err => {

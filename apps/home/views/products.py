@@ -55,7 +55,19 @@ def fetch_products(request):
     page_number = request.GET.get("page", 1)
     per_page = 20
 
-    qs = Product.objects.order_by('-created_at')
+    keyword = request.GET.get("keyword", "")
+    column = request.GET.get("column", "")
+
+    qs = Product.objects.all()
+
+    if column and keyword:
+        qs = qs.filter(**{f"{column}__icontains": keyword})
+
+    columns = [
+        field.name
+        for field in Product._meta.fields
+        if field.name not in ['description', 'created_at']
+    ]
 
     paginator = Paginator(qs, per_page)
     page_obj = paginator.get_page(page_number)
@@ -66,6 +78,7 @@ def fetch_products(request):
         {
             "products": page_obj,
             "paginator": paginator,
+            "columns": columns
         }
     )
 
